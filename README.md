@@ -12,5 +12,5 @@ For development:
 1. make changes
 2. `git add <files>`
 3. `git commit`
-4. `git commit -u origin master` (still need to change from master -> main)
+4. `git push -u origin master` (still need to change from master -> main)
 
