@@ -7,6 +7,7 @@ import { ImageBackground } from 'react-native-web';
 export default function App() {
   const [hasPermission, setHasPermission] = useState(null);
   const [type, setType] = useState(Camera.Constants.Type.back);
+  const [showCamera, setShowCamera] = useState(true);
 
   // camera ref to access Camera
   const cameraRef = useRef(null);
