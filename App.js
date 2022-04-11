@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { StyleSheet, Text, View, TouchableOpacity, Dimensions, Alert } from 'react-native';
 import { Camera } from 'expo-camera';
 import HorizontalScrollView from './components/HorizontalScrollView';
+import CameraPage from './components/cameraPage';
 import { ImageBackground } from 'react-native-web';
 
 export default function App() {
@@ -15,21 +16,21 @@ export default function App() {
   /**
    * called to take the photo
    */
-  const takePhoto = async () => {
-    if (cameraRef) {
-      console.log("in take picture");
-      try {
-        let photo = await cameraRef.current.takePictureAsync({
-          allowsEditing: true,
-          aspect: [4,3],
-          quality: 1,
-        });
-        return photo
-      } catch (e) {
-        console.log(e);
-      }
-    }
-  }
+  // const takePhoto = async () => {
+  //   if (cameraRef) {
+  //     console.log("in take picture");
+  //     try {
+  //       let photo = await cameraRef.current.takePictureAsync({
+  //         allowsEditing: true,
+  //         aspect: [4,3],
+  //         quality: 1,
+  //       });
+  //       return photo
+  //     } catch (e) {
+  //       console.log(e);
+  //     }
+  //   }
+  // }
 
   useEffect(() => {
     (async () => {
@@ -45,34 +46,12 @@ export default function App() {
     return <Text>No access to camera</Text>;
   }
   return (
-    <View style={styles.container}>
-      <Camera style={styles.camera} type={type} ref={cameraRef}>
-        <View style={styles.flipButtonContainer}>
-          <TouchableOpacity
-            style={styles.flipButton}
-            onPress={() => {
-              setType(
-                type === Camera.Constants.Type.back
-                  ? Camera.Constants.Type.front
-                  : Camera.Constants.Type.back
-              );
-            }}>
-            <Text style={styles.text}> Flip </Text>
-          </TouchableOpacity>
-        </View>
-
-        <View style={styles.cameraCaptureButtonContainer}>
-          <TouchableOpacity
-           style={styles.cameraCaptureButton}
-           onPress={async () => {
-             const r = await takePhoto();
-             Alert.alert("DEBUG", JSON.stringify(r))
-            }}
-           >
-          </TouchableOpacity>
-        </View>
-      </Camera>
-    </View>
+    <CameraPage 
+      type={type}
+      showCamera={showCamera}
+      camera={cameraRef}
+    >
+    </CameraPage>
   );
 }
 

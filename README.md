@@ -14,3 +14,23 @@ For development:
 3. `git commit`
 4. `git push -u origin master` (still need to change from master -> main)
 
+
+# React Native
+When working with custom components, we can pass in props like so:
+```javascript
+export default class ClassName extends Component {
+    render() {
+        return(
+            <div>Hello, {this.props.who}!</div>
+        )
+    }
+}
+```
+
+Now, when we create the custom component with:
+```javascript
+<ClassName who="Earth"></ClassName>
+```
+the text in the `<div></div>` will be: `Hello, Earth!`
+
+
