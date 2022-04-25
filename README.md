@@ -34,3 +34,39 @@ Now, when we create the custom component with:
 the text in the `<div></div>` will be: `Hello, Earth!`
 
 
+# CSS Heirarchy
+
+For `CameraPage.js` -->
+```
+container -> ? (
+    camera
+    flipButtonContainer ->
+        flipButton
+        text
+    cameraCaptureButtonContainer ->
+        cameraCaptureButton
+) : (
+    container ->
+        photo
+        cancelButtonContainer ->
+            text
+)
+```
+
+How we want it to look
+```
+container -> ? (
+    camera
+    flipButtonContainer ->
+        flipButton
+        text
+    cameraCaptureButtonContainer ->
+        cameraCaptureButton
+) : (
+    photoContainer ->
+        photo
+        cancelButton ->
+            text
+)
+
+```
