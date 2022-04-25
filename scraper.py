@@ -3,6 +3,10 @@ This file is responsible for the backend logic that scrapes information
 about a location after it has been determined in the application.
 """
 
+# on iOS, see if there's a Siri API that could be used to ask for information about determined location.
+# on Android, 
+# or see if React has an API for calling digital AI systems like Siri, etc.
+
 import beautifulsoup4 as bs
 
 class Scraper():

@@ -2,13 +2,18 @@ import React, { useState, useEffect, useRef } from 'react';
 import { StyleSheet, Text, View, TouchableOpacity, Dimensions, Alert } from 'react-native';
 import { Camera } from 'expo-camera';
 import HorizontalScrollView from './components/HorizontalScrollView';
-import CameraPage from './components/cameraPage';
+import CameraPage from './components/CameraPage';
 import { ImageBackground } from 'react-native-web';
 
 export default function App() {
   const [hasPermission, setHasPermission] = useState(null);
-  const [type, setType] = useState(Camera.Constants.Type.back);
-  const [showCamera, setShowCamera] = useState(true);
+  // const [type, setType] = useState(Camera.Constants.Type.back);
+  // const [showCamera, setShowCamera] = useState(true);
+  // const [photo, setPhoto] = useState(null);
+
+  /**
+   * Use React.ContextAPI to share photo context between components.
+   */
 
   // camera ref to access Camera
   const cameraRef = useRef(null);
@@ -47,8 +52,8 @@ export default function App() {
   }
   return (
     <CameraPage 
-      type={type}
-      showCamera={showCamera}
+      // type={type}
+      // showCamera={showCamera}
       camera={cameraRef}
     >
     </CameraPage>

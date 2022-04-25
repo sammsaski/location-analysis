@@ -2,7 +2,7 @@ import { registerRootComponent } from 'expo';
 import React, { Component } from 'react';
 import { AppRegistry } from 'react-native-web';
 import HorizontalScrollView from './components/HorizontalScrollView';
-import CameraPage from './components/cameraPage';
+import CameraPage from './components/CameraPage';
 
 import App from './App';
 
