@@ -47,9 +47,9 @@ export default class CameraPage extends Component {
          */
         const takePhoto = async () => {
             if (this.props.camera) {
-                console.log("in take picture");
+                // console.log("in take picture");
                 try {
-                    console.log(`showCamera (before) : ${this.state.showCamera}`)
+                    // console.log(`showCamera (before) : ${this.state.showCamera}`)
                     const width = Dimensions.get('window').width;
                     const height = Dimensions.get('window').height;
                     let photo = await this.props.camera.current.takePictureAsync({
@@ -71,7 +71,7 @@ export default class CameraPage extends Component {
                     }
 
                     this.state.showCamera = false;
-                    console.log(`showCamera (after) : ${this.state.showCamera}`)
+                    // console.log(`showCamera (after) : ${this.state.showCamera}`)
                     return photo
                 } catch (e) {
                     console.log(e);
