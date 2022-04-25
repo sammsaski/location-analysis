@@ -3,3 +3,5 @@
  *   We will work with TensorFlow.js in order to make this work.
  */
 
+import '@tensorflow/tfjs-react-native'
+

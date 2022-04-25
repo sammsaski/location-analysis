@@ -1,11 +1,7 @@
-import React, { useState, useEffect, useRef, Component } from 'react';
+import React, { Component } from 'react';
 import { StyleSheet, Text, View, TouchableOpacity, Dimensions, Alert, Image } from 'react-native';
 import { Camera } from 'expo-camera';
-import { ImageBackground, Touchable } from 'react-native-web';
 import { manipulateAsync, FlipType, SaveFormat } from 'expo-image-manipulator';
-import PicturePage from './PicturePage';
-
-import CameraContext from './Context';
 
 /**
  * We'll define the following props for the CameraPage component
@@ -18,7 +14,7 @@ import CameraContext from './Context';
 
 export default class CameraPage extends Component {
     state = {
-        useFrontCamera: Camera.Constants.Type.front,
+        cameraChoice: Camera.Constants.Type.front,
         showCamera: true,
         photo: null,
     }
@@ -35,12 +31,14 @@ export default class CameraPage extends Component {
         /**
          * Flip the camera
          */
-        this.state.useFrontCamera = (
-            this.state.useFrontCamera === Camera.Constants.Type.front
+        this.state.cameraChoice = (
+            this.state.cameraChoice === Camera.Constants.Type.front
                 ? Camera.Constants.Type.back
                 : Camera.Constants.Type.front
         );
-        this.forceUpdate(); // this forces a re-render of the component.
+
+        // Re-render component after flipping camera
+        this.forceUpdate();
     }
 
     render() {
@@ -61,7 +59,7 @@ export default class CameraPage extends Component {
                     });
 
                     // Ensure that we aren't flipping the photo horizontally when using front-camera.
-                    if (this.state.useFrontCamera === Camera.Constants.Type.front) {
+                    if (this.state.cameraChoice === Camera.Constants.Type.front) {
                         photo = await manipulateAsync(
                             photo.localUri || photo.uri,
                             [
@@ -82,17 +80,17 @@ export default class CameraPage extends Component {
         }
 
         return (
-            // this.showCamera === true
-            // ?
             <View style={styles.container}>
                 { this.state.showCamera === true ? (
-                    <Camera styles={styles.camera} type={this.state.useFrontCamera} ref={this.props.camera}>
+                    /**
+                     * If Camera showing, display camera
+                     */
+                    <Camera styles={styles.camera} type={this.state.cameraChoice} ref={this.props.camera}>
                     <View style={styles.flipButtonContainer}>
                         <TouchableOpacity
                             style={styles.flipButton}
                             onPress={() => {
                                 this.changeCamera()
-                                Alert.alert("DEBUG", JSON.stringify(this.state.showCamera))
                             }}>
                             <Text style={styles.text}> Flip </Text>
                         </TouchableOpacity>
@@ -104,40 +102,22 @@ export default class CameraPage extends Component {
                             onPress={async () => {
                                 this.state.photo = await takePhoto();
                                 this.forceUpdate();
-                                // Alert.alert("DEBUG", JSON.stringify(this.state.photo));
                             }}>
                         </TouchableOpacity>
                     </View>
                     </Camera>) : (
-                    // <PicturePage style={styles.picture} photo={this.state.photo}>
-                    //     {/* <View style={styles.cancelButtonContainer}>
-                    //         <TouchableOpacity
-                    //             style={styles.cancelButton}
-                    //             onPress={async () => {
-                    //                 this.cancelShowImage();
-                    //             }}
-                    //         />
-                    //     </View>
-
-                    //     <View style={styles.cameraCaptureButtonContainer}>
-                    //         <TouchableOpacity
-                    //             style={styles.cameraCaptureButton}
-                    //             onPress={async () => {
-                    //                 Alert.alert("DEBUG", JSON.stringify("true"))
-                    //             }}>
-                    //         </TouchableOpacity>
-                    //     </View> */}
-                    // </PicturePage>)}
+                    /**
+                     * If Camera not showing, then display photo
+                     */
                     <View style={styles.photoContainer}>
                         <Image
                             source={this.state.photo}
-                            style={styles.photo} // need to add styles.photo
+                            style={styles.photo}
                         />
 
                         <TouchableOpacity
-                            style={styles.cancelButtonContainer}
+                            style={styles.cancelButton}
                             onPress={async () => {
-                                // Alert.alert("DEBUG", JSON.stringify("Hello world!"))
                                 this.state.showCamera = true;
                                 this.forceUpdate();
                             }}>
@@ -154,70 +134,59 @@ const styles = StyleSheet.create({
         width: Dimensions.get('window').width,
         height: Dimensions.get('window').height,
         flex: 1,
-        backgroundColor: '#fff',
         flexDirection: 'row',
-        alignItems: 'center',
         justifyContent: 'center',
-        borderColor: 'red',
-        borderWidth: 3,
-        borderRadius: 50
+        alignItems: 'center',
+        backgroundColor: '#fff',
+        // borderColor: 'red',
+        // borderWidth: 3,
+        // borderRadius: 50
     },
     
     cameraCaptureButtonContainer: {
-        flex: 1,
-        backgroundColor: 'transparent',
-        justifyContent: 'center',
-        flexDirection: 'row',
-        margin: 20,
-        flexShrink: 0,
         minWidth: Dimensions.get('window').width * 0.9,
         minHeight: Dimensions.get('window').height * 0.8,
-        zIndex: 100 
+        flexDirection: 'row',
+        flex: 1,
+        justifyContent: 'center',
+        margin: 20,
+        backgroundColor: 'transparent',
     },
 
     cameraCaptureButton: {
+        width: Dimensions.get('window').width / 10,
+        height: Dimensions.get('window').height / 10,
         flex: 0.5,
         alignSelf: 'flex-end',
         alignItems: 'center',
-        width: Dimensions.get('window').width / 10, 
-        height: Dimensions.get('window').height / 10,
+        marginVertical: 50,
         borderRadius: 50,
         borderWidth: 3,
         borderColor: '#4169e1',
-        marginVertical: 50
-    },
-
-    cancelButtonContainer: {
-        position: 'relative',
-        justifyContent: 'center',
-        alignSelf: 'flex-end',
-        alignItems: 'center',
-        backgroundColor: 'transparent',
-        flexDirection: 'column',
-        margin: 50,
-        borderColor: 'orange',
-        borderWidth: 3,
-        borderRadius: 50,
-        width: Dimensions.get('window').width / 2, 
-        height: Dimensions.get('window').height / 15,
-        zIndex: 10
     },
 
     cancelButton: {
-        flex: 1,
-        alignSelf: 'flex-start',
+        width: Dimensions.get('window').width / 2,
+        height: Dimensions.get('window').height / 15,
+        position: 'relative',
+        flexDirection: 'column',
+        justifyContent: 'center',
+        alignSelf: 'flex-end',
         alignItems: 'center',
-        borderRadius: 50,
+        margin: 50,
+        borderColor: 'red',
         borderWidth: 3,
-        borderColor: '#4169e1'
+        borderRadius: 50,
+        backgroundColor: 'transparent',
+        zIndex: 10 // MUST
     },
 
     flipButtonContainer: {
         flex: 1,
-        backgroundColor: 'transparent',
         flexDirection: 'column',
         marginRight: 20,
-        marginTop: 50
+        marginTop: 50,
+        backgroundColor: 'transparent',
     },
 
     flipButton: {
@@ -227,19 +196,19 @@ const styles = StyleSheet.create({
     },
 
     camera: {
-        flex: 1,
         width: Dimensions.get('window').width,
         height: Dimensions.get('window').height,
+        flex: 1,
         borderColor: 'green',
         borderWidth: 3,
         borderRadius: 50
     },
 
     photoContainer: {
-        flexDirection: 'row',
-        justifyContent: 'center',
         width: Dimensions.get('window').width,
         height: Dimensions.get('window').height,
+        flexDirection: 'row',
+        justifyContent: 'center',
         borderColor: 'purple',
         borderRadius: 50,
         borderWidth: 3
@@ -255,10 +224,10 @@ const styles = StyleSheet.create({
     },
 
     text: {
+        color: 'red',
         justifyContent: 'center',
         alignSelf: 'center',
-        color: 'purple',
-        borderColor: 'purple',
-        borderWidth: 3
+        // borderColor: 'purple',
+        // borderWidth: 3
     },
 });
